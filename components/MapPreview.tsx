@@ -2,11 +2,12 @@
 
 'use client'
 import React, { useRef, useEffect } from 'react'
+import mapboxgl from 'mapbox-gl'
 import { useEditorStore, FrameType } from '../store/editorStore'
 
 export default function MapPreview() {
   const mapContainer = useRef<HTMLDivElement | null>(null)
-  const mapRef = useRef<any>(null)
+  const mapRef = useRef<mapboxgl.Map | null>(null)
   const { mapStyle, frame } = useEditorStore((s) => ({
     mapStyle: s.mapStyle,
     frame:    s.frame,
@@ -20,26 +21,22 @@ export default function MapPreview() {
   }
 
   useEffect(() => {
-    // Client-side only: dynamisches Importieren von mapbox-gl
-    async function initMap() {
-      if (!mapRef.current && mapContainer.current) {
-        const mapboxgl = (await import('mapbox-gl')).default
-        await import('mapbox-gl/dist/mapbox-gl.css')
-        mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!
-        mapRef.current = new mapboxgl.Map({
-          container: mapContainer.current,
-          style: mapStyle.startsWith('mapbox://')
-            ? mapStyle
-            : `mapbox://styles/mapbox/${mapStyle}`,
-          center: [0, 0],
-          zoom: 2,
-        })
-        mapRef.current.addControl(new mapboxgl.NavigationControl())
-      }
+    if (!mapRef.current && mapContainer.current) {
+      // Stelle sicher, dass du 'mapbox-gl/dist/mapbox-gl.css' global importiert hast
+      mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!
+      mapRef.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: mapStyle.startsWith('mapbox://')
+          ? mapStyle
+          : `mapbox://styles/mapbox/${mapStyle}`,
+        center: [0, 0],
+        zoom: 2,
+      })
+      mapRef.current.addControl(new mapboxgl.NavigationControl())
     }
-    initMap()
   }, [])
 
+  // Bei Änderung von mapStyle das Karten-Layout aktualisieren
   useEffect(() => {
     if (mapRef.current) {
       const styleUrl = mapStyle.startsWith('mapbox://')
