@@ -8,6 +8,10 @@ interface EditorState {
   setActiveStep: (step: Step) => void;
   layout: string;
   setLayout: (layout: string) => void;
+  color: string;
+  setColor: (color: string) => void;
+  mapStyle: string;
+  setMapStyle: (style: string) => void;
 }
 
 export const useEditorStore = create<EditorState>((set) => ({
@@ -15,4 +19,8 @@ export const useEditorStore = create<EditorState>((set) => ({
   setActiveStep: (step) => set({ activeStep: step }),
   layout: 'modern',
   setLayout: (layout) => set({ layout }),
+  color: '#CBA27C',            // Standard-Akzentfarbe
+  setColor: (color) => set({ color }),
+  mapStyle: 'mapbox/light-v10', // Standard-Mapbox-Style
+  setMapStyle: (mapStyle) => set({ mapStyle }),
 }));
