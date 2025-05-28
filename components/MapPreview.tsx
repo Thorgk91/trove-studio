@@ -1,19 +1,18 @@
 // components/MapPreview.tsx
 
+'use client'
 import React, { useRef, useEffect } from 'react'
-import mapboxgl from 'mapbox-gl'
-import 'mapbox-gl/dist/mapbox-gl.css'
 import { useEditorStore, FrameType } from '../store/editorStore'
 
 export default function MapPreview() {
   const mapContainer = useRef<HTMLDivElement | null>(null)
-  const mapRef = useRef<mapboxgl.Map | null>(null)
+  const mapRef = useRef<any>(null)
   const { mapStyle, frame } = useEditorStore((s) => ({
-    mapStyle: s.mapStyle, // z.B. "streets-v11"
+    mapStyle: s.mapStyle,
     frame:    s.frame,
   }))
 
-  // Rahmen-Klassen
+  // Tailwind-Klassen je FrameType
   const frameClasses: Record<FrameType, string> = {
     none:   '',
     simple: 'border border-gray-400',
@@ -21,22 +20,26 @@ export default function MapPreview() {
   }
 
   useEffect(() => {
-    if (!mapRef.current && mapContainer.current) {
-      mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!
-      mapRef.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        // vollständige Style-URL zusammensetzen:
-        style: mapStyle.startsWith('mapbox://')
-          ? mapStyle
-          : `mapbox://styles/mapbox/${mapStyle}`,
-        center: [0, 0],
-        zoom: 2,
-      })
-      mapRef.current.addControl(new mapboxgl.NavigationControl())
+    // Client-side only: dynamisches Importieren von mapbox-gl
+    async function initMap() {
+      if (!mapRef.current && mapContainer.current) {
+        const mapboxgl = (await import('mapbox-gl')).default
+        await import('mapbox-gl/dist/mapbox-gl.css')
+        mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!
+        mapRef.current = new mapboxgl.Map({
+          container: mapContainer.current,
+          style: mapStyle.startsWith('mapbox://')
+            ? mapStyle
+            : `mapbox://styles/mapbox/${mapStyle}`,
+          center: [0, 0],
+          zoom: 2,
+        })
+        mapRef.current.addControl(new mapboxgl.NavigationControl())
+      }
     }
+    initMap()
   }, [])
 
-  // Auf mapStyle-Änderung reagieren
   useEffect(() => {
     if (mapRef.current) {
       const styleUrl = mapStyle.startsWith('mapbox://')
