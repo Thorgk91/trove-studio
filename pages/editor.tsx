@@ -50,8 +50,6 @@ export default function Editor() {
           </div>
           <div className="p-4 bg-white rounded-lg shadow">
             {activeStep === 'Layout' && <LayoutStep />}
-            {activeStep === 'Style' && <p>Hier kommt später der StyleStep</p>}
-            {activeStep === 'Layout' && <LayoutStep />}
             {activeStep === 'Style'  && <StyleStep />}
             {activeStep === 'Text' && <p>Hier kommt später der TextStep</p>}
             {activeStep === 'Frame' && <p>Hier kommt später der FrameStep</p>}
