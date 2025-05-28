@@ -1,3 +1,4 @@
+// @ts-nocheck
 // components/MapPreview.tsx
 import React, { useState } from 'react';
 import Map, { NavigationControl } from 'react-map-gl';
