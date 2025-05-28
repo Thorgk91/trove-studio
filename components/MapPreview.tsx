@@ -3,15 +3,25 @@ import React from 'react';
 import { useEditorStore } from '../store/editorStore';
 
 export default function MapPreview() {
+  const { text, font, color } = useEditorStore((state) => ({
+    text: state.text,
+    font: state.font,
+    color: state.color,
+  }));
+
   return (
-    <div className="h-full w-full flex items-center justify-center bg-gray-200">
-     <div
-       className="absolute inset-0 flex items-center justify-center pointer-events-none"
-       style={{ fontFamily: font, color }}
-     >
-       {text}
-     </div>
-      <p className="text-gray-600">Map Preview Placeholder</p>
+    <div className="relative h-full w-full bg-gray-200">
+      {/* Text Overlay */}
+      <div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        style={{ fontFamily: font, color }}
+      >
+        {text}
+      </div>
+      {/* Placeholder Hinweis */}
+      <p className="absolute bottom-4 right-4 text-xs text-gray-500">
+        Map Preview Placeholder
+      </p>
     </div>
   );
 }
