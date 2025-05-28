@@ -1,22 +1,59 @@
+// src/store/editorStore.ts
+
 import { create } from 'zustand'
+import { devtools } from 'zustand/middleware'
 
-export type LayoutOption = 'Modern' | 'Classic' | 'Minimal'
-export type Step = 'Layout' | 'Style' | 'Text' | 'Frame'
+// Definiere hier am besten deine konkreten Typen für Layout und Frame
+export type LayoutType = 'single' | 'double' | 'grid'
+export type FrameType = 'none' | 'simple' | 'fancy'
 
-interface EditorState {
-  activeStep: Step
-  setActiveStep: (step: Step) => void
+export interface EditorState {
+  // aktueller Schritt im Editor
+  activeStep: number
+  setActiveStep: (step: number) => void
 
-  layout: LayoutOption
-  setLayout: (layout: LayoutOption) => void
+  // Layout-Konfiguration
+  layout: LayoutType
+  setLayout: (layout: LayoutType) => void
+
+  // Farb-Einstellung
+  color: string
+  setColor: (color: string) => void
+
+  // Karten-Stil
+  mapStyle: string
+  setMapStyle: (style: string) => void
+
+  // Freier Text und Schriftart
+  text: string
+  setText: (text: string) => void
+
+  font: string
+  setFont: (font: string) => void
+
+  // Rahmen-Einstellung
+  frame: FrameType
+  setFrame: (frame: FrameType) => void
 }
 
-export const useEditorStore = create<EditorState>((set) => ({
-  // Navigation
-  activeStep: 'Layout',
-  setActiveStep: (step) => set({ activeStep: step }),
+export const useEditorStore = create<EditorState>()(
+  devtools((set) => ({
+    // === Initial-Zustand ===
+    activeStep: 0,
+    layout: 'single',
+    color: '#000000',
+    mapStyle: 'streets-v11',
+    text: '',
+    font: 'sans-serif',
+    frame: 'none',
 
-  // Layout-Step
-  layout: 'Modern',
-  setLayout: (layout) => set({ layout }),
-}))
+    // === Actions / Setter ===
+    setActiveStep: (step) => set({ activeStep: step }),
+    setLayout: (layout) => set({ layout }),
+    setColor: (color) => set({ color }),
+    setMapStyle: (mapStyle) => set({ mapStyle }),
+    setText: (text) => set({ text }),
+    setFont: (font) => set({ font }),
+    setFrame: (frame) => set({ frame }),
+  }))
+)
