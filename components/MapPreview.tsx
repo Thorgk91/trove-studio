@@ -1,36 +1,56 @@
 // components/MapPreview.tsx
-import React from 'react';
-import { useEditorStore } from '../store/editorStore';
+
+import React from 'react'
+import { useEditorStore, FrameType } from '../store/editorStore'
 
 export default function MapPreview() {
-  const { text, font, color, frame } = useEditorStore((state) => ({
-    text: state.text,
-    font: state.font,
-    color: state.color,
-    frame: state.frame,
-  }));
+  const { layout, color, mapStyle, text, font, frame } = useEditorStore((s) => ({
+    layout:    s.layout,
+    color:     s.color,
+    mapStyle:  s.mapStyle,
+    text:      s.text,
+    font:      s.font,
+    frame:     s.frame,
+  }))
 
-  // Frame-Klassen basierend auf dem ausgewählten Frame
-  const frameClass = {
-    none: '',
-    'thin-black': 'border border-black',
-    'thin-white': 'border border-white',
-    wooden: 'border-4 border-[#8B5E3C]',
-  }[frame];
+  // Mapping der FrameType-Werte auf Tailwind-Klassen
+  const frameClasses: Record<FrameType, string> = {
+    none:   '',
+    simple: 'border border-gray-400',
+    fancy:  'border-4 border-dashed border-purple-600 p-1 rounded-lg',
+  }
+
+  // Optional: Mapping der Schriftarten (falls nötig)
+  const fontClasses: Record<string, string> = {
+    'sans-serif': 'font-sans',
+    serif:        'font-serif',
+    monospace:    'font-mono',
+    // weitere Fonts hier ergänzen…
+  }
 
   return (
-    <div className={`relative h-full w-full bg-gray-200 ${frameClass}`}>
-      {/* Text Overlay */}
-      <div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        style={{ fontFamily: font, color }}
-      >
-        {text}
+    <div className="p-4">
+      <h2 className="text-xl font-semibold mb-2">Karten-Vorschau</h2>
+      <div className={`relative w-full h-64 bg-gray-100 overflow-hidden ${frameClasses[frame]}`}>
+        {/* Platzhalter-Karte */}
+        <div className="w-full h-full flex items-center justify-center text-gray-500">
+          Karte (Style: {mapStyle})
+        </div>
+
+        {/* Text-Overlay */}
+        {text && (
+          <div
+            className={`
+              absolute inset-0 flex items-center justify-center pointer-events-none
+              ${fontClasses[font] ?? ''}
+            `}
+          >
+            <span className="text-2xl" style={{ color }}>
+              {text}
+            </span>
+          </div>
+        )}
       </div>
-      {/* Placeholder Hinweis */}
-      <p className="absolute bottom-4 right-4 text-xs text-gray-500">
-        Map Preview Placeholder
-      </p>
     </div>
-  );
+  )
 }
