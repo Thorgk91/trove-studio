@@ -1,25 +1,10 @@
-// @ts-nocheck
 // components/MapPreview.tsx
-import React, { useState } from 'react';
-import Map, { NavigationControl } from 'react-map-gl';
+import React from 'react';
 
 export default function MapPreview() {
-  const [viewState, setViewState] = useState({
-    longitude: 13.4050,
-    latitude: 52.5200,
-    zoom: 11
-  });
-
   return (
-    <Map
-      {...viewState}
-      onMoveEnd={evt => setViewState(evt.viewState)}
-      style={{ width: '100%', height: '100%' }}
-      mapStyle="mapbox://styles/mapbox/light-v10"
-      mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-      className="rounded-lg shadow-md"
-    >
-      <NavigationControl position="top-right" />
-    </Map>
+    <div className="h-full w-full flex items-center justify-center bg-gray-200">
+      <p className="text-gray-600">Map Preview Placeholder</p>
+    </div>
   );
 }
