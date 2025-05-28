@@ -12,6 +12,10 @@ interface EditorState {
   setColor: (color: string) => void;
   mapStyle: string;
   setMapStyle: (style: string) => void;
+  text: string;
+  setText: (text: string) => void;
+  font: string;
+  setFont: (font: string) => void;
 }
 
 export const useEditorStore = create<EditorState>((set) => ({
@@ -23,4 +27,8 @@ export const useEditorStore = create<EditorState>((set) => ({
   setColor: (color) => set({ color }),
   mapStyle: 'mapbox/light-v10', // Standard-Mapbox-Style
   setMapStyle: (mapStyle) => set({ mapStyle }),
+  text: 'Dein Text hier',
+  setText: (text) => set({ text }),
+  font: 'Inter',
+  setFont: (font) => set({ font }),
 }));

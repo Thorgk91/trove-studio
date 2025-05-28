@@ -3,6 +3,7 @@ import React from 'react';
 import { useEditorStore } from '../store/editorStore';
 import LayoutStep from '../components/LayoutStep';
 import StyleStep from '../components/StyleStep';
+import TextStep from '../components/TextStep';
 
 type Step = 'Layout' | 'Style' | 'Text' | 'Frame';
 
@@ -47,7 +48,7 @@ export default function Editor() {
           <div className="p-4 bg-white rounded-lg shadow">
             {activeStep === 'Layout' && <LayoutStep />}
             {activeStep === 'Style'  && <StyleStep />}
-            {activeStep === 'Text' && <p>Hier kommt später der TextStep</p>}
+            {activeStep === 'Text'   && <TextStep />}
             {activeStep === 'Frame' && <p>Hier kommt später der FrameStep</p>}
           </div>
         </div>
