@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import React from 'react';
 import { useEditorStore } from '../store/editorStore';
+import LayoutStep from '../components/LayoutStep';
 
 type Step = 'Layout' | 'Style' | 'Text' | 'Frame';
 
@@ -45,6 +46,12 @@ export default function Editor() {
           <div className="p-4 bg-white rounded-lg shadow">
             {/* Hier später z.B. <LayoutStep /> oder <StyleStep /> */}
             Content for “{activeStep}”
+          </div>
+          <div className="p-4 bg-white rounded-lg shadow">
+            {activeStep === 'Layout' && <LayoutStep />}
+            {activeStep === 'Style' && <p>Hier kommt später der StyleStep</p>}
+            {activeStep === 'Text' && <p>Hier kommt später der TextStep</p>}
+            {activeStep === 'Frame' && <p>Hier kommt später der FrameStep</p>}
           </div>
         </div>
       </main>
