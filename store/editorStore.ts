@@ -3,57 +3,65 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
-// Definiere hier am besten deine konkreten Typen für Layout und Frame
+// === neue Poster-Typen ===
+export type PosterType = 'none' | 'poster1' | 'poster2' | 'poster3'
+
 export type LayoutType = 'single' | 'double' | 'grid'
-export type FrameType = 'none' | 'simple' | 'fancy'
+export type FrameType  = 'none' | 'simple' | 'fancy'
 
 export interface EditorState {
-  // aktueller Schritt im Editor
   activeStep: number
   setActiveStep: (step: number) => void
 
-  // Layout-Konfiguration
+  // Poster
+  poster: PosterType
+  setPoster: (poster: PosterType) => void
+
+  // Layout
   layout: LayoutType
   setLayout: (layout: LayoutType) => void
 
-  // Farb-Einstellung
+  // Style
   color: string
   setColor: (color: string) => void
-
-  // Karten-Stil
   mapStyle: string
   setMapStyle: (style: string) => void
 
-  // Freier Text und Schriftart
+  // Text
   text: string
   setText: (text: string) => void
-
   font: string
   setFont: (font: string) => void
 
-  // Rahmen-Einstellung
+  // Frame
   frame: FrameType
   setFrame: (frame: FrameType) => void
 }
 
 export const useEditorStore = create<EditorState>()(
   devtools((set) => ({
-    // === Initial-Zustand ===
     activeStep: 0,
-    layout: 'single',
-    color: '#000000',
-    mapStyle: 'streets-v11',
-    text: '',
-    font: 'sans-serif',
-    frame: 'none',
-
-    // === Actions / Setter ===
     setActiveStep: (step) => set({ activeStep: step }),
+
+    poster: 'none',
+    setPoster: (poster) => set({ poster }),
+
+    layout: 'single',
     setLayout: (layout) => set({ layout }),
+
+    color: '#000000',
     setColor: (color) => set({ color }),
+
+    mapStyle: 'streets-v11',
     setMapStyle: (mapStyle) => set({ mapStyle }),
+
+    text: '',
     setText: (text) => set({ text }),
+
+    font: 'sans-serif',
     setFont: (font) => set({ font }),
+
+    frame: 'none',
     setFrame: (frame) => set({ frame }),
   }))
 )
