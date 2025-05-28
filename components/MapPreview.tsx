@@ -1,56 +1,54 @@
 // components/MapPreview.tsx
 
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
+import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 import { useEditorStore, FrameType } from '../store/editorStore'
 
 export default function MapPreview() {
-  const { layout, color, mapStyle, text, font, frame } = useEditorStore((s) => ({
-    layout:    s.layout,
-    color:     s.color,
-    mapStyle:  s.mapStyle,
-    text:      s.text,
-    font:      s.font,
-    frame:     s.frame,
+  const mapContainer = useRef<HTMLDivElement | null>(null)
+  const mapRef = useRef<mapboxgl.Map | null>(null)
+  const { mapStyle, frame } = useEditorStore((s) => ({
+    mapStyle: s.mapStyle,
+    frame:    s.frame,
   }))
 
-  // Mapping der FrameType-Werte auf Tailwind-Klassen
+  // Tailwind-Klassen je FrameType
   const frameClasses: Record<FrameType, string> = {
     none:   '',
     simple: 'border border-gray-400',
     fancy:  'border-4 border-dashed border-purple-600 p-1 rounded-lg',
   }
 
-  // Optional: Mapping der Schriftarten (falls nötig)
-  const fontClasses: Record<string, string> = {
-    'sans-serif': 'font-sans',
-    serif:        'font-serif',
-    monospace:    'font-mono',
-    // weitere Fonts hier ergänzen…
-  }
+  useEffect(() => {
+    if (!mapRef.current && mapContainer.current) {
+      mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!
+      mapRef.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style:     mapStyle,
+        center:    [0, 0],     // Standard-Mittelpunkt
+        zoom:      2,          // Standard-Zoomlevel
+      })
+
+      // Zoom & Pan Controls hinzufügen
+      mapRef.current.addControl(new mapboxgl.NavigationControl())
+    }
+  }, [])
+
+  // Bei Änderung des mapStyle aktualisieren
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.setStyle(mapStyle)
+    }
+  }, [mapStyle])
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-semibold mb-2">Karten-Vorschau</h2>
-      <div className={`relative w-full h-64 bg-gray-100 overflow-hidden ${frameClasses[frame]}`}>
-        {/* Platzhalter-Karte */}
-        <div className="w-full h-full flex items-center justify-center text-gray-500">
-          Karte (Style: {mapStyle})
-        </div>
-
-        {/* Text-Overlay */}
-        {text && (
-          <div
-            className={`
-              absolute inset-0 flex items-center justify-center pointer-events-none
-              ${fontClasses[font] ?? ''}
-            `}
-          >
-            <span className="text-2xl" style={{ color }}>
-              {text}
-            </span>
-          </div>
-        )}
-      </div>
+      <h2 className="text-xl font-semibold mb-2">Interaktive Karten-Vorschau</h2>
+      <div
+        ref={mapContainer}
+        className={`relative w-full h-96 bg-gray-100 overflow-hidden ${frameClasses[frame]}`}
+      />
     </div>
   )
 }
