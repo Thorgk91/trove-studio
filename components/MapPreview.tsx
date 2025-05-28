@@ -9,11 +9,11 @@ export default function MapPreview() {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const { mapStyle, frame } = useEditorStore((s) => ({
-    mapStyle: s.mapStyle,
+    mapStyle: s.mapStyle, // z.B. "streets-v11"
     frame:    s.frame,
   }))
 
-  // Tailwind-Klassen je FrameType
+  // Rahmen-Klassen
   const frameClasses: Record<FrameType, string> = {
     none:   '',
     simple: 'border border-gray-400',
@@ -25,20 +25,24 @@ export default function MapPreview() {
       mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!
       mapRef.current = new mapboxgl.Map({
         container: mapContainer.current,
-        style:     mapStyle,
-        center:    [0, 0],     // Standard-Mittelpunkt
-        zoom:      2,          // Standard-Zoomlevel
+        // vollständige Style-URL zusammensetzen:
+        style: mapStyle.startsWith('mapbox://')
+          ? mapStyle
+          : `mapbox://styles/mapbox/${mapStyle}`,
+        center: [0, 0],
+        zoom: 2,
       })
-
-      // Zoom & Pan Controls hinzufügen
       mapRef.current.addControl(new mapboxgl.NavigationControl())
     }
   }, [])
 
-  // Bei Änderung des mapStyle aktualisieren
+  // Auf mapStyle-Änderung reagieren
   useEffect(() => {
     if (mapRef.current) {
-      mapRef.current.setStyle(mapStyle)
+      const styleUrl = mapStyle.startsWith('mapbox://')
+        ? mapStyle
+        : `mapbox://styles/mapbox/${mapStyle}`
+      mapRef.current.setStyle(styleUrl)
     }
   }, [mapStyle])
 
