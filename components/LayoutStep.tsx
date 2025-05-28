@@ -1,35 +1,34 @@
-// components/LayoutStep.tsx
-import React from 'react';
-import { useEditorStore } from '../store/editorStore';
+import React from 'react'
+import { useEditorStore, LayoutOption } from '../store/editorStore'
 
-const layouts = [
-  { id: 'modern', label: 'Modern' },
-  { id: 'classic', label: 'Classic' },
-  { id: 'minimal', label: 'Minimal' },
-];
+const options: LayoutOption[] = ['Modern', 'Classic', 'Minimal']
 
 export default function LayoutStep() {
-  const { layout, setLayout } = useEditorStore((state) => ({
-    layout: state.layout,
-    setLayout: state.setLayout,
-  }));
+  const layout = useEditorStore((s) => s.layout)
+  const setLayout = useEditorStore((s) => s.setLayout)
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {layouts.map((l) => (
-        <div
-          key={l.id}
-          onClick={() => setLayout(l.id)}
-          className={`
-            cursor-pointer p-4 border rounded-lg text-center
-            ${layout === l.id
-              ? 'border-accent bg-accent/10'
-              : 'border-gray-200 hover:border-accent'}
-          `}
-        >
-          {l.label}
-        </div>
-      ))}
+    <div className="p-4 space-y-4">
+      <h2 className="text-xl font-semibold mb-2">Wähle dein Layout</h2>
+      <div className="flex gap-4">
+        {options.map((opt) => {
+          const selected = opt === layout
+          return (
+            <button
+              key={opt}
+              onClick={() => setLayout(opt)}
+              className={
+                'px-4 py-2 border rounded-md font-medium ' +
+                (selected
+                  ? 'bg-primary text-white border-primary'
+                  : 'bg-white text-gray-700 hover:bg-gray-100')
+              }
+            >
+              {opt}
+            </button>
+          )
+        })}
+      </div>
     </div>
-  );
+  )
 }
