@@ -1,9 +1,14 @@
+// store/editorStore.ts
 import create from 'zustand';
 
+type Step = 'Layout' | 'Style' | 'Text' | 'Frame';
+
 interface EditorState {
-  // define state here
+  activeStep: Step;
+  setActiveStep: (step: Step) => void;
 }
 
-export const useEditorStore = create<EditorState>(() => ({
-  // initial state
+export const useEditorStore = create<EditorderState>((set) => ({
+  activeStep: 'Layout',
+  setActiveStep: (step) => set({ activeStep: step }),
 }));
