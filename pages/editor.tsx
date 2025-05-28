@@ -1,61 +1,58 @@
+// pages/editor.tsx
+
 import dynamic from 'next/dynamic'
 import React from 'react'
-import { useEditorStore, Step } from '../store/editorStore'
+import { useEditorStore } from '../store/editorStore'
 import LayoutStep from '../components/LayoutStep'
+import StyleStep from '../components/StyleStep'
+import TextStep from '../components/TextStep'
+import FrameStep from '../components/FrameStep'
 
-const MapPreview = dynamic(() => import('../components/MapPreview'), {
-  ssr: false,
-})
+// MapPreview nur clientseitig laden (z.B. für mapbox)
+const MapPreview = dynamic(() => import('../components/MapPreview'), { ssr: false })
 
-const steps: Step[] = ['Layout', 'Style', 'Text', 'Frame']
+export default function EditorPage() {
+  const { activeStep, setActiveStep } = useEditorStore((s) => ({
+    activeStep: s.activeStep,
+    setActiveStep: s.setActiveStep,
+  }))
 
-export default function Editor() {
-  const { activeStep, setActiveStep } = useEditorStore()
-
-  // Rendert den aktuellen Step
-  function renderStep() {
-    switch (activeStep) {
-      case 'Layout':
-        return <LayoutStep />
-      // später: StyleStep, TextStep, FrameStep
-      default:
-        return <div className="p-4">Noch nicht implementiert</div>
-    }
-  }
+  // Definition aller Schritte mit Label und Komponente
+  const steps = [
+    { id: 0, label: 'Layout', component: <LayoutStep /> },
+    { id: 1, label: 'Style', component: <StyleStep /> },
+    { id: 2, label: 'Text',  component: <TextStep /> },
+    { id: 3, label: 'Frame', component: <FrameStep /> },
+    { id: 4, label: 'Preview', component: <MapPreview /> },
+  ]
 
   return (
     <div className="flex h-screen">
-      <aside className="w-1/4 bg-gray-50 p-6 border-r">
-        <h1 className="text-2xl font-bold mb-4">Editor Steps</h1>
-        <ul className="space-y-2">
-          {steps.map((step) => (
-            <li key={step}>
-              <button
-                onClick={() => setActiveStep(step)}
-                className={
-                  'w-full text-left px-2 py-1 rounded ' +
-                  (step === activeStep
-                    ? 'bg-primary text-white'
-                    : 'hover:bg-gray-100')
-                }
+      {/* Sidebar */}
+      <aside className="w-1/4 bg-gray-100 p-4">
+        <nav>
+          <ul>
+            {steps.map((step) => (
+              <li
+                key={step.id}
+                onClick={() => setActiveStep(step.id)}
+                className={`
+                  mb-2 cursor-pointer px-3 py-2 rounded
+                  ${activeStep === step.id
+                    ? 'bg-white font-semibold shadow'
+                    : 'text-gray-600 hover:bg-gray-200'}
+                `}
               >
-                {step}
-              </button>
-            </li>
-          ))}
-        </ul>
+                {step.label}
+              </li>
+            ))}
+          </ul>
+        </nav>
       </aside>
 
-      <main className="flex-1 grid grid-rows-[auto_1fr]">
-        {/* Oben: Map-Preview */}
-        <div className="h-1/2">
-          <MapPreview />
-        </div>
-
-        {/* Unten: Step-Inhalte */}
-        <div className="h-1/2 overflow-auto bg-white">
-          {renderStep()}
-        </div>
+      {/* Hauptbereich: aktueller Schritt */}
+      <main className="flex-1 p-6 overflow-auto bg-white">
+        {steps.find((step) => step.id === activeStep)?.component}
       </main>
     </div>
   )
