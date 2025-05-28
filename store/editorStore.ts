@@ -8,7 +8,7 @@ interface EditorState {
   setActiveStep: (step: Step) => void;
 }
 
-export const useEditorStore = create<EditorderState>((set) => ({
+export const useEditorStore = create<EditorState>((set) => ({
   activeStep: 'Layout',
   setActiveStep: (step) => set({ activeStep: step }),
 }));
