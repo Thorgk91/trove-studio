@@ -1,9 +1,11 @@
-// pages/editor.tsx
 import dynamic from 'next/dynamic';
 import React from 'react';
 import { useEditorStore } from '../store/editorStore';
 
+type Step = 'Layout' | 'Style' | 'Text' | 'Frame';
+
 const MapPreview = dynamic(() => import('../components/MapPreview'), { ssr: false });
+
 
 export default function Editor() {
   const { activeStep, setActiveStep } = useEditorStore();
