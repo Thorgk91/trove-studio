@@ -45,10 +45,6 @@ export default function Editor() {
           </div>
           {/* Platzhalter für die Step-Komponente */}
           <div className="p-4 bg-white rounded-lg shadow">
-            {/* Hier später z.B. <LayoutStep /> oder <StyleStep /> */}
-            Content for “{activeStep}”
-          </div>
-          <div className="p-4 bg-white rounded-lg shadow">
             {activeStep === 'Layout' && <LayoutStep />}
             {activeStep === 'Style'  && <StyleStep />}
             {activeStep === 'Text' && <p>Hier kommt später der TextStep</p>}
