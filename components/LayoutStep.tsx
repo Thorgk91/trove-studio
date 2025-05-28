@@ -1,33 +1,36 @@
-import React from 'react'
-import { useEditorStore, LayoutOption } from '../store/editorStore'
+// components/LayoutStep.tsx
 
-const options: LayoutOption[] = ['Modern', 'Classic', 'Minimal']
+import React from 'react'
+import { useEditorStore, LayoutType } from '../store/editorStore'
+
+const layoutOptions: { id: LayoutType; label: string }[] = [
+  { id: 'single', label: 'Modern' },
+  { id: 'double', label: 'Classic' },
+  { id: 'grid',   label: 'Minimal' },
+]
 
 export default function LayoutStep() {
-  const layout = useEditorStore((s) => s.layout)
-  const setLayout = useEditorStore((s) => s.setLayout)
+  const { layout, setLayout } = useEditorStore((s) => ({
+    layout:    s.layout,
+    setLayout: s.setLayout,
+  }))
 
   return (
-    <div className="p-4 space-y-4">
-      <h2 className="text-xl font-semibold mb-2">Wähle dein Layout</h2>
-      <div className="flex gap-4">
-        {options.map((opt) => {
-          const selected = opt === layout
-          return (
-            <button
-              key={opt}
-              onClick={() => setLayout(opt)}
-              className={
-                'px-4 py-2 border rounded-md font-medium ' +
-                (selected
-                  ? 'bg-primary text-white border-primary'
-                  : 'bg-white text-gray-700 hover:bg-gray-100')
-              }
-            >
-              {opt}
-            </button>
-          )
-        })}
+    <div className="p-4">
+      <h2 className="text-xl font-semibold mb-4">Layout wählen</h2>
+      <div className="grid grid-cols-3 gap-4">
+        {layoutOptions.map((opt) => (
+          <div
+            key={opt.id}
+            onClick={() => setLayout(opt.id)}
+            className={`
+              cursor-pointer p-4 border rounded-lg text-center transition-colors
+              ${layout === opt.id ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white'}
+            `}
+          >
+            {opt.label}
+          </div>
+        ))}
       </div>
     </div>
   )
