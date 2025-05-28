@@ -7,10 +7,11 @@ export default function MapPreview() {
     text: state.text,
     font: state.font,
     color: state.color,
+    frame: state.frame,
   }));
 
   return (
-    <div className="relative h-full w-full bg-gray-200">
+    <div className={`relative h-full w-full bg-gray-200 ${frameClass}`}>
       {/* Text Overlay */}
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"

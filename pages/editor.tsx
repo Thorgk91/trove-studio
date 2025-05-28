@@ -4,6 +4,7 @@ import { useEditorStore } from '../store/editorStore';
 import LayoutStep from '../components/LayoutStep';
 import StyleStep from '../components/StyleStep';
 import TextStep from '../components/TextStep';
+import FrameStep from '../components/FrameStep';
 
 type Step = 'Layout' | 'Style' | 'Text' | 'Frame';
 
@@ -49,7 +50,7 @@ export default function Editor() {
             {activeStep === 'Layout' && <LayoutStep />}
             {activeStep === 'Style'  && <StyleStep />}
             {activeStep === 'Text'   && <TextStep />}
-            {activeStep === 'Frame' && <p>Hier kommt später der FrameStep</p>}
+            {activeStep === 'Frame'  && <FrameStep />}
           </div>
         </div>
       </main>

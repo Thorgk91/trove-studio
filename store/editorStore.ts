@@ -16,6 +16,8 @@ interface EditorState {
   setText: (text: string) => void;
   font: string;
   setFont: (font: string) => void;
+  frame: string;               // neu
+  setFrame: (frame: string) => void; // neu
 }
 
 export const useEditorStore = create<EditorState>((set) => ({
@@ -23,12 +25,14 @@ export const useEditorStore = create<EditorState>((set) => ({
   setActiveStep: (step) => set({ activeStep: step }),
   layout: 'modern',
   setLayout: (layout) => set({ layout }),
-  color: '#CBA27C',            // Standard-Akzentfarbe
+  color: '#CBA27C',
   setColor: (color) => set({ color }),
-  mapStyle: 'mapbox/light-v10', // Standard-Mapbox-Style
+  mapStyle: 'mapbox/light-v10',
   setMapStyle: (mapStyle) => set({ mapStyle }),
   text: 'Dein Text hier',
   setText: (text) => set({ text }),
   font: 'Inter',
   setFont: (font) => set({ font }),
+  frame: 'none',              // neu
+  setFrame: (frame) => set({ frame }), // neu
 }));
