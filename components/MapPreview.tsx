@@ -3,12 +3,20 @@ import React from 'react';
 import { useEditorStore } from '../store/editorStore';
 
 export default function MapPreview() {
-  const { text, font, color } = useEditorStore((state) => ({
+  const { text, font, color, frame } = useEditorStore((state) => ({
     text: state.text,
     font: state.font,
     color: state.color,
     frame: state.frame,
   }));
+
+  // Frame-Klassen basierend auf dem ausgewählten Frame
+  const frameClass = {
+    none: '',
+    'thin-black': 'border border-black',
+    'thin-white': 'border border-white',
+    wooden: 'border-4 border-[#8B5E3C]',
+  }[frame];
 
   return (
     <div className={`relative h-full w-full bg-gray-200 ${frameClass}`}>
