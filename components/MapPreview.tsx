@@ -3,6 +3,7 @@
 'use client'
 import React, { useRef, useEffect } from 'react'
 import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 import { useEditorStore, FrameType } from '../store/editorStore'
 
 export default function MapPreview() {
@@ -22,8 +23,11 @@ export default function MapPreview() {
 
   useEffect(() => {
     if (!mapRef.current && mapContainer.current) {
-      // Stelle sicher, dass du 'mapbox-gl/dist/mapbox-gl.css' global importiert hast
+      // Debug: Ausgabe des Tokens in der Konsole
+      console.log('Mapbox Token:', process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN)
+      // Token setzen
       mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!
+      // Map initialisieren
       mapRef.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: mapStyle.startsWith('mapbox://')
